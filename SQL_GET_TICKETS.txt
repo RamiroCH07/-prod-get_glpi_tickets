@@ -1,0 +1,85 @@
+SELECT 
+	ticked_id,
+    titulo,
+    fecha_creacion,
+    fecha_resolucion,
+    concat(nombre_personal_asistido,' ',apellido_personal_asistido) personal_asistido,
+    concat(nombre_personal_asistio,' ',apellido_personal_asistio) personal_asignado,
+    nivel_urgencia,
+    nivel_impacto,
+    nivel_prioridad,
+    categoria,
+    comentario_categoria
+FROM 
+(SELECT 
+	final_tick.ticked_id,
+    final_tick.titulo,
+    final_tick.fecha_creacion,
+    final_tick.fecha_resolucion,
+    us_asist.firstname as nombre_personal_asistido,
+    us_asist.realname as apellido_personal_asistido,
+    us_asisted.firstname as nombre_personal_asistio,
+    us_asisted.realname as apellido_personal_asistio,
+    final_tick.nivel_urgencia,
+    final_tick.nivel_impacto,
+    final_tick.nivel_prioridad,
+    cat.name as categoria,
+    cat.comment as comentario_categoria
+FROM
+-- CONSULTA QUE NOS RETORNA LOS REGISTROS DE LOS TICKETS CON EL ID DEL USUARIOS ASISTIDOS Y LOS QUE ASISTIERON
+(SELECT 
+	tick.id as ticked_id,
+    tick.name as titulo,
+    tick.date as fecha_creacion,
+    tick.solvedate as fecha_resolucion,
+    tick_u_asist.users_id as usuario_asistido_id,
+    tick_u_asisted.users_id as usuario_asistio_id,
+    tick.urgency as nivel_urgencia,
+    tick.impact as nivel_impacto,
+    tick.priority as nivel_prioridad,
+    tick.itilcategories_id as categoria_id
+FROM
+	glpi_tickets tick
+LEFT JOIN
+-- CONSULTA DE LOS IDS DE LOS TICKETS Y EL ID USUARIO QUE FUE ASISTIDO
+(SELECT 
+	tickets_id,
+    MAX(users_id) as users_id
+FROM 
+(SELECT *
+FROM
+	glpi_tickets_users
+WHERE 
+	TYPE = 1) S_Q
+GROUP BY 
+	tickets_id) tick_u_asist 
+ON
+	tick.id = tick_u_asist.tickets_id
+LEFT JOIN
+-- CONSULTA DE LOS IDS DE LOS TICKETS Y EL ID USUARIO QUE ASISTIÓ 
+(SELECT 
+	tickets_id,
+    MAX(users_id) as users_id
+FROM 
+(SELECT *
+FROM
+	glpi_tickets_users
+WHERE 
+	TYPE = 2) S_Q
+GROUP BY 
+	tickets_id) tick_u_asisted
+ON
+	tick.id = tick_u_asisted.tickets_id) final_tick
+LEFT JOIN 
+	glpi_users us_asist
+ON 
+	us_asist.id = final_tick.usuario_asistido_id
+LEFT JOIN 
+	glpi_users us_asisted
+ON
+	us_asisted.id = final_tick.usuario_asistio_id 
+LEFT JOIN 
+	glpi_itilcategories cat
+ON
+	cat.id = final_tick.categoria_id) ticked
+ORDER BY fecha_creacion DESC 
