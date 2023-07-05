@@ -1,5 +1,6 @@
 import pyodbc
 import pandas as pd
+import re
 #%%
 class DB_SQL_Server:
     def __init__(self,server,db,admin=None,pswd=None,driver = '17'):
@@ -85,10 +86,12 @@ class DB_SQL_Server:
     def _generate_values(self,lrow):
         values = '('
         for elem in lrow:
+            elem = elem.strip()
             if elem == 'None':
                 values = values+'NULL'+','
             else:
-                #elem = re.sub("'"," ",elem)
+                elem = re.sub("'"," ",elem)
+                elem = re.sub('"',' ',elem)
                 values = values + f'{repr(elem)}'+','
         values = values.strip(',')
         values = values + ')'
@@ -130,6 +133,7 @@ class DB_SQL_Server:
                 print("Descripcion problema:",e)
                 print(sql_insert)
                 break
+        print("EL TRASLADO DE DATOS HA CONCLUÍDO CON ÉXITO")
             
 
             

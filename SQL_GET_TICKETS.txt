@@ -8,8 +8,8 @@ SELECT
     nivel_urgencia,
     nivel_impacto,
     nivel_prioridad,
-    categoria,
-    comentario_categoria
+    categoria
+
 FROM 
 (SELECT 
 	final_tick.ticked_id,
@@ -23,8 +23,8 @@ FROM
     final_tick.nivel_urgencia,
     final_tick.nivel_impacto,
     final_tick.nivel_prioridad,
-    cat.name as categoria,
-    cat.comment as comentario_categoria
+    cat.name as categoria
+
 FROM
 -- CONSULTA QUE NOS RETORNA LOS REGISTROS DE LOS TICKETS CON EL ID DEL USUARIOS ASISTIDOS Y LOS QUE ASISTIERON
 (SELECT 
