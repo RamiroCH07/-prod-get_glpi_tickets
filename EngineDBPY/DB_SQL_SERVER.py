@@ -83,11 +83,16 @@ class DB_SQL_Server:
         return camp_names
     
     
+    def _represent_null(self,txt):
+        boolean = (len(txt.split())==0 or txt=='None')
+        return (boolean)
+        
+        
     def _generate_values(self,lrow):
         values = '('
         for elem in lrow:
             elem = elem.strip()
-            if elem == 'None':
+            if self._represent_null(elem):
                 values = values+'NULL'+','
             else:
                 elem = re.sub("'"," ",elem)

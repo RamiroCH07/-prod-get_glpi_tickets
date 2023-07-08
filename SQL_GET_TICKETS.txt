@@ -1,6 +1,7 @@
 SELECT 
 	ticked_id,
     titulo,
+    descripcion,
     fecha_creacion,
     fecha_resolucion,
     concat(nombre_personal_asistido,' ',apellido_personal_asistido) personal_asistido,
@@ -14,6 +15,7 @@ FROM
 (SELECT 
 	final_tick.ticked_id,
     final_tick.titulo,
+    final_tick.descripcion,
     final_tick.fecha_creacion,
     final_tick.fecha_resolucion,
     us_asist.firstname as nombre_personal_asistido,
@@ -30,6 +32,7 @@ FROM
 (SELECT 
 	tick.id as ticked_id,
     tick.name as titulo,
+    tick.content as descripcion,
     tick.date as fecha_creacion,
     tick.solvedate as fecha_resolucion,
     tick_u_asist.users_id as usuario_asistido_id,
