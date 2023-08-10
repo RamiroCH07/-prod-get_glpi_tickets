@@ -66,28 +66,17 @@ pswd = '123456SQLserver'
 obj_database_sqlserver = DB_SQL_Server(server,db,admin,pswd)
 #%%
 obj_database_sqlserver.Connect_db()
-sql_create = '''
-DROP TABLE IF EXISTS Tickets
-CREATE TABLE Tickets(
-	ticket_id INT PRIMARY KEY,
-	titulo varchar(500),
-    descripcion varchar(1000),
-	fechacreacion DATETIME,
-	fecharesolucion DATETIME,
-	personalasistido varchar(250),
-	personalasignado varchar(250),
-	urgencia INT,
-	impacto INT,
-	prioridad INT,
-	categoria VARCHAR(150)
-)
-'''
+
 columns = ['ticket_id','titulo','descripcion','fechacreacion','fecharesolucion',
            'personalasistido','personalasignado','urgencia','impacto','prioridad','categoria']
 
 table_name = 'Tickets'
 
-obj_database_sqlserver.STORAGE_ROWS_db(sql_create,columns,df.values,table_name)
+obj_database_sqlserver.STORAGE_ROWS_db('',columns,
+                                       df.values,
+                                       table_name,
+                                       ADD_NEW_ROWS=True)
+
 
 #%% CORRECION DE TABLA
 

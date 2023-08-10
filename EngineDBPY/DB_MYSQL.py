@@ -28,6 +28,11 @@ class DB_MYSQL:
         self.cnxn.close()
         print("CONEXION FINALIZADA")
         
+    def GET_ONE_ROW_db(self,sql_query):
+        self.cursor.execute(sql_query)
+        row = self.cursor.fetchone()
+        return row[0]
+        
     def GET_ROWS_db(self,sql_query):
         self.cursor.execute(sql_query)
         rows = self.cursor.fetchall()
